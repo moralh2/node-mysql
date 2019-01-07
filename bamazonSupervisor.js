@@ -54,3 +54,39 @@ function outputByDept() {
         }
     );
 }
+
+function addDept() {
+    inquirer
+        .prompt([
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of the new department?"
+            },
+            {
+                name: "overhead",
+                type: "input",
+                message: "How much is the overhead for this department?",
+                validate: function (value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ])
+        .then(function (answer) {
+            connection.query(
+                "INSERT INTO departments SET ?",
+                {
+                    name: answer.name,
+                    overhead: answer.overhead,
+                },
+                function (err) {
+                    if (err) throw err
+                    console.log("The new department has been created!")
+                    connection.end()
+                }
+            )
+        })
+}
