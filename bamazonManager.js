@@ -18,7 +18,6 @@ connection.connect(function (err) {
 });
 
 function determineCommand() {
-
     inquirer
         .prompt({
             name: "choice",
@@ -40,22 +39,12 @@ function determineCommand() {
                     break;
                 case "Add New Product":
                     addProduct()
+                    break;
                 default:
                     console.log("Error selecting manager options")
+                    break;
             }
         });
-
-
-
-
-    // query the database for all products
-
-    // connection.query("SELECT * FROM products", function (err, results) {
-    //     if (err) throw err;
-
-    //     // collect list, prompt user to select one
-
-    // });
 }
 
 function outputAll() {
@@ -152,8 +141,57 @@ function addInventory() {
                         connection.end();
                     }
                 );
-            
-               
             });
-});
+    });
+}
+
+function addProduct() {
+    inquirer
+        .prompt([
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of the new product?"
+            },
+            {
+                name: "department",
+                type: "input",
+                message: "What department does the product belong to?"
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "How many do we have in stock?",
+                validate: function (value) {
+                    return checkIfInteger(value)
+                }
+            },
+            {
+                name: "price",
+                type: "input",
+                message: "What is the product's cost?",
+                validate: function (value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ])
+        .then(function (answer) {
+            connection.query(
+                "INSERT INTO products SET ?",
+                {
+                    name: answer.name,
+                    department: answer.department,
+                    stock_quantity: parseInt(answer.quantity),
+                    price: answer.price
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("The new product has been added successfully!");
+                    connection.end();
+                }
+            );
+        });
 }
