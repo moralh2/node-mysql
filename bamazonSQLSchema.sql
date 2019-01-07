@@ -9,6 +9,14 @@ CREATE TABLE products(
   department VARCHAR(50) NOT NULL,
   price DECIMAL(13,4) default 0,
   stock_quantity INT default 0,
+  sales DECIMAL(13,4) default 0,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE departments(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  overhead DECIMAL(13,4) default 0,
   PRIMARY KEY (id)
 );
 
@@ -41,3 +49,15 @@ VALUES ("Bed Frame", "Furniture", 75.00, 3);
 
 INSERT INTO products (name, department, price, stock_quantity)
 VALUES ("T-Shirt", "Clothing", 7.50, 100);
+
+INSERT INTO departments (name, overhead)
+VALUES ("Electronics", 25.50);
+
+INSERT INTO departments (name, overhead)
+VALUES ("Clothing", 45.50);
+
+INSERT INTO departments (name, overhead)
+VALUES ("Furniture", 60.50);
+
+INSERT INTO departments (name, overhead)
+VALUES ("Shoes", 15.00);
