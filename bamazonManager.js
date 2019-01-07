@@ -10,12 +10,12 @@ var connection = mysql.createConnection({
     user: "root",
     password: keys.db.pw,
     database: "bamazon_DB"
-});
+})
 
 connection.connect(function (err) {
-    if (err) throw err;
-    determineCommand();
-});
+    if (err) throw err
+    determineCommand()
+})
 
 function determineCommand() {
     inquirer
@@ -29,21 +29,21 @@ function determineCommand() {
             switch (answer.choice) {
                 case "View Products for Sale":
                     outputAll()
-                    break;
+                    break
                 case "View Low Inventory":
                     outputLow()
-                    break;
+                    break
                 case "Add to Inventory":
                     addInventory()
-                    break;
+                    break
                 case "Add New Product":
                     addProduct()
-                    break;
+                    break
                 default:
                     console.log("Error selecting manager options")
-                    break;
+                    break
             }
-        });
+        })
 }
 
 function listManagerOptions() {
@@ -59,19 +59,19 @@ function listManagerOptions() {
 function outputAll() {
     console.log("--All Products")
     connection.query(`SELECT * FROM products`, function (err, res) {
-        if (err) throw err;
-        expFunc.printProducts(res);
-        connection.end();
+        if (err) throw err
+        expFunc.printProducts(res)
+        connection.end()
     });
 }
 
 function outputLow() {
     console.log("--Products Low on Inventory")
     connection.query(`SELECT * FROM products WHERE stock_quantity <= 5`, function (err, res) {
-        if (err) throw err;
-        expFunc.printProducts(res);
-        connection.end();
-    });
+        if (err) throw err
+        expFunc.printProducts(res)
+        connection.end()
+    })
 }
 
 function addInventory() {
@@ -105,13 +105,13 @@ function addInventory() {
                         { id: chosenItem.id }
                     ],
                     function (error) {
-                        if (error) throw err;
-                        console.log("You've updated the inventory successfully!");
-                        connection.end();
+                        if (error) throw err
+                        console.log("You've updated the inventory successfully!")
+                        connection.end()
                     }
-                );
-            });
-    });
+                )
+            })
+    })
 }
 
 function addProduct() {
@@ -157,10 +157,10 @@ function addProduct() {
                     price: answer.price
                 },
                 function (err) {
-                    if (err) throw err;
-                    console.log("The new product has been added successfully!");
-                    connection.end();
+                    if (err) throw err
+                    console.log("The new product has been added successfully!")
+                    connection.end()
                 }
-            );
-        });
+            )
+        })
 }

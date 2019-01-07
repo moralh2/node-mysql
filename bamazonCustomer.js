@@ -10,17 +10,17 @@ var connection = mysql.createConnection({
     user: "root",
     password: keys.db.pw,
     database: "bamazon_DB"
-});
+})
 
 connection.connect(function (err) {
-    if (err) throw err;
-    buyProduct();
-});
+    if (err) throw err
+    buyProduct()
+})
 
 function buyProduct() {
     // query the database for all products
     connection.query("SELECT * FROM products", function (err, results) {
-        if (err) throw err;
+        if (err) throw err
         // collect list, prompt user to select one
         inquirer
             .prompt([
@@ -54,17 +54,17 @@ function buyProduct() {
                             { id: chosenItem.id }
                         ],
                         function (error) {
-                            if (error) throw err;
-                            console.log("Your purchase was successful!");
-                            connection.end();
+                            if (error) throw err
+                            console.log("Your purchase was successful!")
+                            connection.end()
                         }
                     );
                 }
                 else {
                     // if not enough in stock...
-                    console.log("We don't have enough in stock...");
-                    connection.end();
+                    console.log("We don't have enough in stock...")
+                    connection.end()
                 }
-            });
-    });
+            })
+    })
 }
