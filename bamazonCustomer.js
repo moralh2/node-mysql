@@ -1,5 +1,4 @@
-require("dotenv").config();
-// to save the pw like done in Liri HW
+require("dotenv").config()
 
 var keys = require("./keys.js")
 var mysql = require("mysql")
@@ -15,18 +14,8 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId);
-    // afterConnection();
     buyProduct();
 });
-
-//   function afterConnection() {
-//     connection.query(`SELECT * FROM products`, function(err, res) {
-//       if (err) throw err;
-//       console.log(res);
-//       connection.end();
-//     });
-//   }
 
 function buyProduct() {
     // query the database for all products
@@ -69,14 +58,14 @@ function buyProduct() {
                 }
                 var userQty = parseInt(answer.quantity)
                 // determine if enough in stock
-                if (chosenItem.quantity >= userQty) {
-                    var newQuantity = chosenItem.quantity - userQty
+                if (chosenItem.stock_quantity >= userQty) {
+                    var newQuantity = chosenItem.stock_quantity - userQty
                     // bid was high enough, so update db, let the user know, and start over
                     connection.query(
                         "UPDATE products SET ? WHERE ?",
                         [
                             {
-                                quantity: newQuantity
+                                stock_quantity: newQuantity
                             },
                             {
                                 id: chosenItem.id
@@ -94,6 +83,7 @@ function buyProduct() {
                 else {
                     // if not enough in stock
                     console.log("We don't have enough in stock...");
+                    connection.end();
                     // start();
                 }
             });
