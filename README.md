@@ -52,7 +52,7 @@ To use the app as a supervisor, you must use node to call on the `bamazonSupervi
 
 * `View Product Sales by Department` - will list all the departments, with their overhead, total sales, and profits (the most consuming part of the HW)
 
-![Alt Text](gifs/supervisorDept.gif)
+![Alt Text](gifs/supervisorDepts.gif)
 
 * `Create New Department` - will prompt user to enter new department info: name and overhead
 
