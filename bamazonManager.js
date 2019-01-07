@@ -27,15 +27,13 @@ function determineCommand() {
             message: "What would you like to do?"
         })
         .then(function (answer) {
-            // cases for manager optios
-            console.log("\nYou Chose\n" + answer.choice)
-
+            // cases for manager options
             switch (answer.choice) {
                 case "View Products for Sale":
                     outputAll()
                     break;
-                case y:
-                    // code block
+                case "View Low Inventory":
+                    outputLow()
                     break;
                 default:
                 // code block
@@ -81,7 +79,17 @@ function determineCommand() {
 }
 
 function outputAll() {
+    console.log("--All Products")
     connection.query(`SELECT * FROM products`, function (err, res) {
+        if (err) throw err;
+        printProducts(res);
+        connection.end();
+    });
+}
+
+function outputLow() {
+    console.log("--Products Low on Inventory")
+    connection.query(`SELECT * FROM products WHERE stock_quantity <= 5`, function (err, res) {
         if (err) throw err;
         printProducts(res);
         connection.end();
@@ -91,7 +99,7 @@ function outputAll() {
 function printProducts(results) {
     for (var i = 0; i < results.length; i++) {
         console.log(results[i].name + " (" + results[i].department + ") - " + 
-        "$" + parseFloat(results[i].price) + " [Qty: " + results[i].stock_quantity + "]")
+        "$" + results[i].price.toFixed(2) + " [Qty: " + results[i].stock_quantity + "]")
     }
 }
 
