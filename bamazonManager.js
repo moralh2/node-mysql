@@ -1,6 +1,7 @@
 require("dotenv").config()
+var expFunc = require("./commonFunctions")
 
-var keys = require("./keys.js")
+var keys = require("./keys")
 var mysql = require("mysql")
 var inquirer = require("inquirer")
 
@@ -72,10 +73,10 @@ function printProducts(results) {
     }
 }
 
-function checkIfInteger(stringInput) {
-    var checks = (isNaN(stringInput) === false) && (Number(stringInput) === parseInt(stringInput))
-    return checks
-}
+// function checkIfInteger(stringInput) {
+//     var checks = (isNaN(stringInput) === false) && (Number(stringInput) === parseInt(stringInput))
+//     return checks
+// }
 
 function returnNames(objectList) {
     var nameList = [];
@@ -121,7 +122,7 @@ function addInventory() {
                     type: "input",
                     message: "How many items are you adding?",
                     validate: function (value) {
-                        return checkIfInteger(value)
+                        return expFunc.checkIfInteger(value)
                     }
                 }
             ])
@@ -163,7 +164,7 @@ function addProduct() {
                 type: "input",
                 message: "How many do we have in stock?",
                 validate: function (value) {
-                    return checkIfInteger(value)
+                    return expFunc.checkIfInteger(value)
                 }
             },
             {
