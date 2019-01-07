@@ -27,13 +27,7 @@ function buyProduct() {
                 {
                     name: "choice",
                     type: "rawlist",
-                    choices: function () {
-                        var choiceArray = [];
-                        for (var i = 0; i < results.length; i++) {
-                            choiceArray.push(results[i].name);
-                        }
-                        return choiceArray;
-                    },
+                    choices: returnNames(results),
                     message: "Which item would you like to purchase?"
                 },
                 {
@@ -41,51 +35,58 @@ function buyProduct() {
                     type: "input",
                     message: "How many would you like to buy? (integer)",
                     validate: function (value) {
-                        if ((isNaN(value) === false) && (Number(value) === parseInt(value))) {
-                            return true;
-                        }
-                        return false;
+                        return checkIfInteger(value)
                     }
                 }
             ])
             .then(function (answer) {
                 // get the information of the chosen item
-                var chosenItem;
-                for (var i = 0; i < results.length; i++) {
-                    if (results[i].name === answer.choice) {
-                        chosenItem = results[i];
-                    }
-                }
+                var chosenItem = returnProduct(results, answer)
                 var userQty = parseInt(answer.quantity)
                 // determine if enough in stock
                 if (chosenItem.stock_quantity >= userQty) {
                     var newQuantity = chosenItem.stock_quantity - userQty
-                    // bid was high enough, so update db, let the user know, and start over
                     connection.query(
                         "UPDATE products SET ? WHERE ?",
                         [
-                            {
-                                stock_quantity: newQuantity
-                            },
-                            {
-                                id: chosenItem.id
-                            }
+                            { stock_quantity: newQuantity },
+                            { id: chosenItem.id }
                         ],
                         function (error) {
                             if (error) throw err;
                             console.log("Your purchase was successful!");
                             connection.end();
-                            // start();
                         }
-                        
                     );
                 }
                 else {
                     // if not enough in stock
                     console.log("We don't have enough in stock...");
                     connection.end();
-                    // start();
                 }
             });
     });
+}
+
+function checkIfInteger(stringInput) {
+    var checks = (isNaN(stringInput) === false) && ( Number(stringInput) === parseInt(stringInput) )
+    return checks
+}
+
+function returnNames(objectList) {
+    var nameList = [];
+    for (var i = 0; i < objectList.length; i++) {
+        nameList.push(objectList[i].name);
+    }
+    return nameList
+}
+
+function returnProduct(results, answer) {
+    var chosenItem;
+    for (var i = 0; i < results.length; i++) {
+        if (results[i].name === answer.choice) {
+            chosenItem = results[i];
+        }
+    }
+    return chosenItem
 }
