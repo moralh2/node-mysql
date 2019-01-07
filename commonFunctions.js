@@ -24,5 +24,11 @@ module.exports = {
             }
         }
         return chosenItem
+    },
+    printDepts: function(results) {
+        for (var i = 0; i < results.length; i++) {
+            console.log(results[i].id + ": " + results[i].name + " - " +
+                "[Overhead: " + results[i].overhead.toFixed(2) + "]")
+        }
     }
 }
