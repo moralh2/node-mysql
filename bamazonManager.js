@@ -35,34 +35,14 @@ function determineCommand() {
                 case "View Low Inventory":
                     outputLow()
                     break;
+                case "Add to Inventory":
+                    addInventory()
+                    break;
+                case "Add New Product":
+                    addProduct()
                 default:
-                // code block
+                    console.log("Error selecting manager options")
             }
-
-            // get the information of the chosen item
-            // var chosenItem = returnProduct(results, answer)
-            // var userQty = parseInt(answer.quantity)
-            // // determine if enough in stock
-            // if (chosenItem.stock_quantity >= userQty) {
-            //     var newQuantity = chosenItem.stock_quantity - userQty
-            //     connection.query(
-            //         "UPDATE products SET ? WHERE ?",
-            //         [
-            //             { stock_quantity: newQuantity },
-            //             { id: chosenItem.id }
-            //         ],
-            //         function (error) {
-            //             if (error) throw err;
-            //             console.log("Your purchase was successful!");
-            //             connection.end();
-            //         }
-            //     );
-            // }
-            // else {
-            //     // if not enough in stock
-            //     console.log("We don't have enough in stock...");
-            //     connection.end();
-            // }
         });
 
 
@@ -98,8 +78,8 @@ function outputLow() {
 
 function printProducts(results) {
     for (var i = 0; i < results.length; i++) {
-        console.log(results[i].name + " (" + results[i].department + ") - " + 
-        "$" + results[i].price.toFixed(2) + " [Qty: " + results[i].stock_quantity + "]")
+        console.log(results[i].name + " (" + results[i].department + ") - " +
+            "$" + results[i].price.toFixed(2) + " [Qty: " + results[i].stock_quantity + "]")
     }
 }
 
@@ -134,4 +114,46 @@ function listManagerOptions() {
         "Add New Product"
     ]
     return options
+}
+
+function addInventory() {
+    connection.query("SELECT * FROM products", function (err, results) {
+        if (err) throw err
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: returnNames(results),
+                    message: "Which item would you like to add stock to?"
+                },
+                {
+                    name: "quantity",
+                    type: "input",
+                    message: "How many items are you adding?",
+                    validate: function (value) {
+                        return checkIfInteger(value)
+                    }
+                }
+            ])
+            .then(function (answer) {
+                var chosenItem = returnProduct(results, answer)
+                var userQty = parseInt(answer.quantity)
+                var newQuantity = chosenItem.stock_quantity + userQty
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        { stock_quantity: newQuantity },
+                        { id: chosenItem.id }
+                    ],
+                    function (error) {
+                        if (error) throw err;
+                        console.log("You've updated the inventory successfully!");
+                        connection.end();
+                    }
+                );
+            
+               
+            });
+});
 }
