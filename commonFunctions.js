@@ -5,7 +5,8 @@ module.exports = {
     printProducts: function(results) {
         for (var i = 0; i < results.length; i++) {
             console.log(results[i].name + " (" + results[i].department + ") - " +
-                "$" + results[i].price.toFixed(2) + " [Qty: " + results[i].stock_quantity + "]")
+                "$" + results[i].price.toFixed(2) + " [Qty: " + results[i].stock_quantity + "] " + 
+                "{ Sales: $" + results[i].sales.toFixed(2) + " }" )
         }
     },
     returnNames: function(objectList) {

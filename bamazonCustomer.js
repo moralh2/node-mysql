@@ -47,10 +47,14 @@ function buyProduct() {
                 if (chosenItem.stock_quantity >= userQty) {
                     // update qty
                     var newQuantity = chosenItem.stock_quantity - userQty
+                    // calculate sale
+                    var thisSale = (userQty * chosenItem.price)
+                    var totalSales = chosenItem.sales + thisSale
+
                     connection.query(
                         "UPDATE products SET ? WHERE ?",
                         [
-                            { stock_quantity: newQuantity },
+                            { stock_quantity: newQuantity, sales: totalSales },
                             { id: chosenItem.id }
                         ],
                         function (error) {
