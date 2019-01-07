@@ -16,13 +16,84 @@ var connection = mysql.createConnection({
   connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
-    afterConnection();
+    // afterConnection();
+    queryProductLine();
   });
   
-  function afterConnection() {
-    connection.query(`SELECT * FROM products`, function(err, res) {
+//   function afterConnection() {
+//     connection.query(`SELECT * FROM products`, function(err, res) {
+//       if (err) throw err;
+//       console.log(res);
+//       connection.end();
+//     });
+//   }
+
+  function queryProductLine() {
+    // query the database for all products
+    connection.query("SELECT * FROM products", function(err, results) {
       if (err) throw err;
-      console.log(res);
-      connection.end();
+      // collect list, prompt user to select one
+      inquirer
+        .prompt([
+          {
+            name: "choice",
+            type: "rawlist",
+            choices: function() {
+              var choiceArray = [];
+              for (var i = 0; i < results.length; i++) {
+                choiceArray.push(results[i].name);
+              }
+              return choiceArray;
+            },
+            message: "Which item would you like to purchase?"
+          },
+          {
+            name: "quantity",
+            type: "input",
+            message: "How many would you like to buy?"
+          }
+        ])
+        .then(function(answer) {
+          // get the information of the chosen item
+          var chosenItem;
+          for (var i = 0; i < results.length; i++) {
+            if (results[i].name === answer.choice) {
+              chosenItem = results[i];
+            }
+          }
+
+          var userQty = parseInt(answer.quantity)
+
+          console.log(chosenItem)
+          console.log(chosenItem.quantity)
+          console.log(userQty)
+
+          // determine if enough in stock
+          if (chosenItem.quantity >= userQty) {
+            var newQuantity = chosenItem.quantity - userQty
+            // bid was high enough, so update db, let the user know, and start over
+            connection.query(
+              "UPDATE products SET ? WHERE ?",
+              [
+                {
+                  quantity: newQuantity
+                },
+                {
+                  id: chosenItem.id
+                }
+              ],
+              function(error) {
+                if (error) throw err;
+                console.log("Your purchase was successful!");
+                // start();
+              }
+            );
+          }
+          else {
+            // if not enough in stock
+            console.log("We don't have enough in stock...");
+            // start();
+          }
+        });
     });
   }
