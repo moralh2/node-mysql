@@ -28,7 +28,9 @@ module.exports = {
     printDepts: function(results) {
         for (var i = 0; i < results.length; i++) {
             console.log(results[i].id + ": " + results[i].name + " - " +
-                "[Overhead: " + results[i].overhead.toFixed(2) + "]")
+                "[Overhead: " + results[i].overhead.toFixed(2) + "] " +
+                "[Sales: " + results[i].total_sales.toFixed(2) + "] " +
+                "[Profits: " + results[i].profits.toFixed(2) + "]")
         }
     }
 }

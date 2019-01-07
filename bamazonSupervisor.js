@@ -42,22 +42,15 @@ function determineCommand() {
 
 function outputByDept() {
     console.log("--All Product Sales by Department")
-    var salesByDept = []
-    // will divide into pieces -- first, get the sales per department
     connection.query(
-        `SELECT id, d.name, d.overhead, total_sales 
+        `SELECT id, d.name, d.overhead, total_sales, (total_sales - d.overhead) as profits 
         FROM departments AS d 
         INNER JOIN (SELECT p.department, SUM(p.sales) AS total_sales FROM products AS p GROUP BY p.department) AS t 
         ON d.name = t.department;`, 
         function (err, res) {
-            console.log(res)
             if (err) throw err
-            for (var i = 0; i < res.length; i++) {
-                console.log(res[i])
-                salesByDept.push(res[i]);
-            }
+            expFunc.printDepts(res)
             connection.end()
         }
     );
-    console.log(salesByDept)
 }
