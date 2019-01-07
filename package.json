@@ -1,0 +1,24 @@
+{
+  "name": "mode-mysql-cli-bamazon",
+  "version": "1.0.0",
+  "description": "bamazon storefront",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moralh2/node-mysql.git"
+  },
+  "author": "h morales",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moralh2/node-mysql/issues"
+  },
+  "homepage": "https://github.com/moralh2/node-mysql#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "inquirer": "^6.2.1",
+    "mysql": "^2.16.0"
+  }
+}
