@@ -20,57 +20,83 @@ connection.connect(function (err) {
 function determineCommand() {
 
     inquirer
-            .prompt({
-                name: "choice",
-                type: "rawlist",
-                choices: listManagerOptions(),
-                message: "What would you like to do?"  
-            })
-            .then(function (answer) {
-                // cases for manager optios
-                console.log("\nYou Chose\n" + answer.choice)
+        .prompt({
+            name: "choice",
+            type: "rawlist",
+            choices: listManagerOptions(),
+            message: "What would you like to do?"
+        })
+        .then(function (answer) {
+            // cases for manager optios
+            console.log("\nYou Chose\n" + answer.choice)
 
-                // get the information of the chosen item
-                // var chosenItem = returnProduct(results, answer)
-                // var userQty = parseInt(answer.quantity)
-                // // determine if enough in stock
-                // if (chosenItem.stock_quantity >= userQty) {
-                //     var newQuantity = chosenItem.stock_quantity - userQty
-                //     connection.query(
-                //         "UPDATE products SET ? WHERE ?",
-                //         [
-                //             { stock_quantity: newQuantity },
-                //             { id: chosenItem.id }
-                //         ],
-                //         function (error) {
-                //             if (error) throw err;
-                //             console.log("Your purchase was successful!");
-                //             connection.end();
-                //         }
-                //     );
-                // }
-                // else {
-                //     // if not enough in stock
-                //     console.log("We don't have enough in stock...");
-                //     connection.end();
-                // }
-            });
+            switch (answer.choice) {
+                case "View Products for Sale":
+                    outputAll()
+                    break;
+                case y:
+                    // code block
+                    break;
+                default:
+                // code block
+            }
+
+            // get the information of the chosen item
+            // var chosenItem = returnProduct(results, answer)
+            // var userQty = parseInt(answer.quantity)
+            // // determine if enough in stock
+            // if (chosenItem.stock_quantity >= userQty) {
+            //     var newQuantity = chosenItem.stock_quantity - userQty
+            //     connection.query(
+            //         "UPDATE products SET ? WHERE ?",
+            //         [
+            //             { stock_quantity: newQuantity },
+            //             { id: chosenItem.id }
+            //         ],
+            //         function (error) {
+            //             if (error) throw err;
+            //             console.log("Your purchase was successful!");
+            //             connection.end();
+            //         }
+            //     );
+            // }
+            // else {
+            //     // if not enough in stock
+            //     console.log("We don't have enough in stock...");
+            //     connection.end();
+            // }
+        });
 
 
 
-    
+
     // query the database for all products
 
     // connection.query("SELECT * FROM products", function (err, results) {
     //     if (err) throw err;
-        
+
     //     // collect list, prompt user to select one
-        
+
     // });
 }
 
+function outputAll() {
+    connection.query(`SELECT * FROM products`, function (err, res) {
+        if (err) throw err;
+        printProducts(res);
+        connection.end();
+    });
+}
+
+function printProducts(results) {
+    for (var i = 0; i < results.length; i++) {
+        console.log(results[i].name + " (" + results[i].department + ") - " + 
+        "$" + parseFloat(results[i].price) + " [Qty: " + results[i].stock_quantity + "]")
+    }
+}
+
 function checkIfInteger(stringInput) {
-    var checks = (isNaN(stringInput) === false) && ( Number(stringInput) === parseInt(stringInput) )
+    var checks = (isNaN(stringInput) === false) && (Number(stringInput) === parseInt(stringInput))
     return checks
 }
 
