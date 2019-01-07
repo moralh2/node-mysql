@@ -40,11 +40,12 @@ function buyProduct() {
                 }
             ])
             .then(function (answer) {
-                // get the information of the chosen item
+                // get selected product, convert quantity
                 var chosenItem = expFunc.returnProduct(results, answer)
                 var userQty = parseInt(answer.quantity)
                 // determine if enough in stock
                 if (chosenItem.stock_quantity >= userQty) {
+                    // update qty
                     var newQuantity = chosenItem.stock_quantity - userQty
                     connection.query(
                         "UPDATE products SET ? WHERE ?",
@@ -60,7 +61,7 @@ function buyProduct() {
                     );
                 }
                 else {
-                    // if not enough in stock
+                    // if not enough in stock...
                     console.log("We don't have enough in stock...");
                     connection.end();
                 }

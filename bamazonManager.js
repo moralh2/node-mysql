@@ -26,7 +26,6 @@ function determineCommand() {
             message: "What would you like to do?"
         })
         .then(function (answer) {
-            // cases for manager options
             switch (answer.choice) {
                 case "View Products for Sale":
                     outputAll()
