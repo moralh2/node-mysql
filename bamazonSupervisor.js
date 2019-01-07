@@ -42,9 +42,19 @@ function determineCommand() {
 
 function outputByDept() {
     console.log("--All Product Sales by Department")
-    connection.query(`SELECT * FROM departments`, function (err, res) {
-        if (err) throw err
-        expFunc.printDepts(res)
-        connection.end()
-    });
+    var salesByDept = []
+    // will divide into pieces -- first, get the sales per department
+    connection.query(
+        `SELECT department, sum(sales) FROM products GROUP BY department;`, 
+        function (err, res) {
+            console.log(res)
+            if (err) throw err
+            for (var i = 0; i < res.length; i++) {
+                console.log(res[i])
+                salesByDept.push(res[i]);
+            }
+            connection.end()
+        }
+    );
+    console.log(salesByDept)
 }
