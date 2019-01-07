@@ -46,3 +46,14 @@ To use the app as a manager, you must use node to call on the `bamazonManager.js
 * `Add New Product` - will prompt user to enter new product info: name, department, stock quantity, and price
 
 ![Alt Text](gifs/managerNew.gif)
+
+### Supervisor
+To use the app as a supervisor, you must use node to call on the `bamazonSupervisor.js` file. The user will be prompted to select from the available options:
+
+* `View Product Sales by Department` - will list all the departments, with their overhead, total sales, and profits (the most consuming part of the HW)
+
+![Alt Text](gifs/supervisorDept.gif)
+
+* `Create New Department` - will prompt user to enter new department info: name and overhead
+
+![Alt Text](gifs/supervisorAdd.gif)
