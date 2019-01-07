@@ -1,6 +1,5 @@
 require("dotenv").config()
 var expFunc = require("./commonFunctions")
-
 var keys = require("./keys")
 var mysql = require("mysql")
 var inquirer = require("inquirer")
@@ -48,54 +47,6 @@ function determineCommand() {
         });
 }
 
-function outputAll() {
-    console.log("--All Products")
-    connection.query(`SELECT * FROM products`, function (err, res) {
-        if (err) throw err;
-        printProducts(res);
-        connection.end();
-    });
-}
-
-function outputLow() {
-    console.log("--Products Low on Inventory")
-    connection.query(`SELECT * FROM products WHERE stock_quantity <= 5`, function (err, res) {
-        if (err) throw err;
-        printProducts(res);
-        connection.end();
-    });
-}
-
-function printProducts(results) {
-    for (var i = 0; i < results.length; i++) {
-        console.log(results[i].name + " (" + results[i].department + ") - " +
-            "$" + results[i].price.toFixed(2) + " [Qty: " + results[i].stock_quantity + "]")
-    }
-}
-
-// function checkIfInteger(stringInput) {
-//     var checks = (isNaN(stringInput) === false) && (Number(stringInput) === parseInt(stringInput))
-//     return checks
-// }
-
-function returnNames(objectList) {
-    var nameList = [];
-    for (var i = 0; i < objectList.length; i++) {
-        nameList.push(objectList[i].name);
-    }
-    return nameList
-}
-
-function returnProduct(results, answer) {
-    var chosenItem;
-    for (var i = 0; i < results.length; i++) {
-        if (results[i].name === answer.choice) {
-            chosenItem = results[i];
-        }
-    }
-    return chosenItem
-}
-
 function listManagerOptions() {
     options = [
         "View Products for Sale",
@@ -106,6 +57,24 @@ function listManagerOptions() {
     return options
 }
 
+function outputAll() {
+    console.log("--All Products")
+    connection.query(`SELECT * FROM products`, function (err, res) {
+        if (err) throw err;
+        expFunc.printProducts(res);
+        connection.end();
+    });
+}
+
+function outputLow() {
+    console.log("--Products Low on Inventory")
+    connection.query(`SELECT * FROM products WHERE stock_quantity <= 5`, function (err, res) {
+        if (err) throw err;
+        expFunc.printProducts(res);
+        connection.end();
+    });
+}
+
 function addInventory() {
     connection.query("SELECT * FROM products", function (err, results) {
         if (err) throw err
@@ -114,7 +83,7 @@ function addInventory() {
                 {
                     name: "choice",
                     type: "rawlist",
-                    choices: returnNames(results),
+                    choices: expFunc.returnNames(results),
                     message: "Which item would you like to add stock to?"
                 },
                 {
@@ -127,7 +96,7 @@ function addInventory() {
                 }
             ])
             .then(function (answer) {
-                var chosenItem = returnProduct(results, answer)
+                var chosenItem = expFunc.returnProduct(results, answer)
                 var userQty = parseInt(answer.quantity)
                 var newQuantity = chosenItem.stock_quantity + userQty
                 connection.query(

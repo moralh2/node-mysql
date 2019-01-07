@@ -1,5 +1,5 @@
 require("dotenv").config()
-
+var expFunc = require("./commonFunctions")
 var keys = require("./keys.js")
 var mysql = require("mysql")
 var inquirer = require("inquirer")
@@ -27,7 +27,7 @@ function buyProduct() {
                 {
                     name: "choice",
                     type: "rawlist",
-                    choices: returnNames(results),
+                    choices: expFunc.returnNames(results),
                     message: "Which item would you like to purchase?"
                 },
                 {
@@ -35,13 +35,13 @@ function buyProduct() {
                     type: "input",
                     message: "How many would you like to buy? (integer)",
                     validate: function (value) {
-                        return checkIfInteger(value)
+                        return expFunc.checkIfInteger(value)
                     }
                 }
             ])
             .then(function (answer) {
                 // get the information of the chosen item
-                var chosenItem = returnProduct(results, answer)
+                var chosenItem = expFunc.returnProduct(results, answer)
                 var userQty = parseInt(answer.quantity)
                 // determine if enough in stock
                 if (chosenItem.stock_quantity >= userQty) {
@@ -66,27 +66,4 @@ function buyProduct() {
                 }
             });
     });
-}
-
-function checkIfInteger(stringInput) {
-    var checks = (isNaN(stringInput) === false) && ( Number(stringInput) === parseInt(stringInput) )
-    return checks
-}
-
-function returnNames(objectList) {
-    var nameList = [];
-    for (var i = 0; i < objectList.length; i++) {
-        nameList.push(objectList[i].name);
-    }
-    return nameList
-}
-
-function returnProduct(results, answer) {
-    var chosenItem;
-    for (var i = 0; i < results.length; i++) {
-        if (results[i].name === answer.choice) {
-            chosenItem = results[i];
-        }
-    }
-    return chosenItem
 }
